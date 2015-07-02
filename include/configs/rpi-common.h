@@ -181,8 +181,40 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	ENV_DEVICE_SETTINGS \
 	ENV_MEM_LAYOUT_SETTINGS \
-	BOOTENV
+	BOOTENV \
+	"bootpart=0:1\0"
 
-#define CONFIG_BOOTDELAY 2
+#undef  CONFIG_BOOTDELAY
+#define CONFIG_BOOTDELAY -2
+
+#undef  BOOTENV_DEV_DHCP
+#define BOOTENV_DEV_DHCP(devtypeu, devtypel, instance) \
+	"bootcmd_dhcp=" \
+		BOOTENV_RUN_USB_INIT \
+		"if dhcp ${kernel_addr_r}; then " \
+			"tftp ${fdt_addr_r} ${fdtfile};" \
+			"bootz ${kernel_addr_r} - ${fdt_addr_r};" \
+			"fi\0"
+
+#undef  CONFIG_BOOTCOMMAND
+#define CONFIG_BOOTCOMMAND \
+	"mmc dev 0; if mmc rescan; then " \
+		"echo SD/MMC found!;" \
+		"if test -e mmc ${bootpart} /uEnv.txt; then " \
+			"load mmc ${bootpart} ${loadaddr} /uEnv.txt;" \
+			"env import -t ${loadaddr} ${filesize};" \
+			"echo File /uEnv.txt found and loaded.;" \
+			"if test -n ${uenvcmd}; then " \
+				"echo Found uenvcmd environment! Running uenvcmd ...;" \
+				"run uenvcmd;" \
+			"else " \
+				"echo No uenvcmd environment within /uEnv.txt set!;" \
+			"fi;" \
+		"else " \
+			"echo No uEnv.txt, trying default boot command ...;" \
+			"run bootcmd_mmc0;" \
+		"fi;" \
+	"fi;"
+
 
 #endif
