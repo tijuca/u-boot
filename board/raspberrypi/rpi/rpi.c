@@ -94,6 +94,11 @@ static const struct {
 		"bcm2836-rpi-2-b.dtb",
 		true,
 	},
+	[BCM2836_BOARD_REV_2_B_V11] = {
+		"2 Model B v1.1",
+		"bcm2709-rpi-2-b.dtb",
+		true,
+	},
 #else
 	[BCM2835_BOARD_REV_B_I2C0_2] = {
 		"Model B (no P5)",

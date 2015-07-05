@@ -127,6 +127,7 @@ struct bcm2835_mbox_tag_hdr {
 
 #ifdef CONFIG_BCM2836
 #define BCM2836_BOARD_REV_2_B		0x4
+#define BCM2836_BOARD_REV_2_B_V11	0x16
 #else
 /*
  * 0x2..0xf from:
