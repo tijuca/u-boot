@@ -211,7 +211,7 @@ static void set_fdtfile(void)
 	if (getenv("fdtfile"))
 		return;
 
-	fdtfile = models[rpi_board_rev].fdtfile;
+	fdtfile = models[6 + rpi_board_rev].fdtfile;
 	setenv("fdtfile", fdtfile);
 }
 
@@ -304,17 +304,19 @@ static void get_board_rev(void)
 		rpi_board_rev = (rpi_board_rev >> 4) & 0xff;
 	else
 		rpi_board_rev &= 0xff;
-	if (rpi_board_rev >= ARRAY_SIZE(models)) {
-		printf("RPI: Board rev %u outside known range\n",
-		       rpi_board_rev);
+	if (rpi_board_rev >= ARRAY_SIZE(models)+1) {
+		printf("RPI: Board rev %u outside known range (%u)\n",
+		       rpi_board_rev, ARRAY_SIZE(models));
 		rpi_board_rev = 0;
 	}
-	if (!models[rpi_board_rev].name) {
+	if (!models[6 + rpi_board_rev].name) {
 		printf("RPI: Board rev %u unknown\n", rpi_board_rev);
 		rpi_board_rev = 0;
+	} else {
+		printf("RPI: Board rev %u\n", rpi_board_rev);
 	}
 
-	name = models[rpi_board_rev].name;
+	name = models[6 + rpi_board_rev].name;
 	printf("RPI %s\n", name);
 }
 
